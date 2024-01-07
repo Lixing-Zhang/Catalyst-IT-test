@@ -5,10 +5,12 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+        stdin_open: true
+        tty: true
         depends_on:
             - mysql
         volumes:
-            - ./:/var/www/html/
+            - .:/usr/src/app
         networks:
             - catalyst
         ports:
