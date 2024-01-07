@@ -42,8 +42,9 @@ into the DB. All other functions will be executed, but the database won\'t be al
 
             if ($options->getOpt('create_table')) {
 
-                $this->createTable($pdo);
+                $this->resetTable($pdo);
 
+                $this->success('Users Table Created');
                 return;
             }
 
@@ -75,11 +76,13 @@ into the DB. All other functions will be executed, but the database won\'t be al
                         $sql = "INSERT INTO `users` (name, surname, email) VALUES (:name, :surname, :email)";
                         $stmt= $pdo->prepare($sql);
 
-                        if (!$options->getOpt('dry_run')) {
+                        if ($options->getOpt('dry_run')) {
+                            $this->success('[DRY RUN] Successfully inserted a user with data ' . implode(',', $data));
+                        } else {
                             $stmt->execute($data);
+                            $this->success('Successfully inserted a user with data' . implode(',', $data));
                         }
 
-                        $this->success('Successfully inserted a user with data' . implode(',', $user));
                     } catch (\PDOException $e) {
                         $this->error($e->getMessage());
                         continue;
@@ -100,23 +103,39 @@ into the DB. All other functions will be executed, but the database won\'t be al
         return $validator->isValid($email, new RFCValidation()); //true
     }
 
+    private function resetTable(\PDO $pdo): void
+    {
+        $this->dropTable($pdo);
+
+        $this->createTable($pdo);
+    }
+
     private function createTable(\PDO $pdo): bool
     {
         try {
-            $pdo->exec("DROP TABLE IF EXISTS `users`");
-            $pdo->exec("CREATE TABLE IF NOT EXISTS `users` (
+            return $pdo->exec("CREATE TABLE IF NOT EXISTS `users` (
                 `id` INT(11) AUTO_INCREMENT PRIMARY KEY,
                 `name` VARCHAR(255) NOT NULL,
                 `surname` VARCHAR(255) NOT NULL,
                 `email` VARCHAR(255) UNIQUE NOT NULL
             );");
 
-            return true;
         } catch (PDOException $e) {
             $this->error($e->getMessage());
         }
 
         return false;
+    }
+
+    private function dropTable(\PDO $pdo): void
+    {
+        try {
+            $pdo->exec("DROP TABLE IF EXISTS `users`");
+            return;
+        } catch (PDOException $e) {
+            $this->error($e->getMessage());
+        }
+
     }
 
     private function createPDO(string $host, string $username, string $password): PDO

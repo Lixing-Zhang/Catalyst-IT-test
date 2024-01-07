@@ -20,4 +20,4 @@ function generate(int $number, int $end): void
     }
 }
 
-generate(1, 10);
+generate(1, 100);
