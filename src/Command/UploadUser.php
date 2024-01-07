@@ -90,9 +90,6 @@ into the DB. All other functions will be executed, but the database won\'t be al
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
-//        if ($options->getOpt('help')) {
-//            return $options->help();
-//        }
 
     }
 
@@ -116,7 +113,7 @@ into the DB. All other functions will be executed, but the database won\'t be al
 
             return true;
         } catch (PDOException $e) {
-            $this->error($e->getMessage());//Remove or change message in production code
+            $this->error($e->getMessage());
         }
 
         return false;

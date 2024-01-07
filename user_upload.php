@@ -8,7 +8,6 @@ require __DIR__ . '/vendor/autoload.php';
 // execute it
 $cli = new UploadUser();
 
-
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
