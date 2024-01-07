@@ -1,0 +1,35 @@
+version: '3'
+services:
+    php:
+        container_name: php
+        build:
+            context: .
+            dockerfile: Dockerfile
+        depends_on:
+            - mysql
+        volumes:
+            - ./:/var/www/html/
+        networks:
+            - catalyst
+        ports:
+            - "80:80"
+    mysql:
+        container_name: mysql
+        image: mysql:8.0
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: catalyst_password
+            MYSQL_DATABASE: catalyst
+            MYSQL_USER: catalyst
+            MYSQL_PASSWORD: catalyst_password
+        ports:
+            - "3306:3306"
+        networks:
+            - catalyst
+        volumes:
+            - dbData:/var/lib/mysql
+networks:
+    catalyst:
+        driver: bridge
+volumes:
+    dbData:
