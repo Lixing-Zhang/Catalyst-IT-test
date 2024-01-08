@@ -31,9 +31,8 @@ into the DB. All other functions will be executed, but the database won\'t be al
     protected function main(Options $options): void
     {
         try {
-
-            if ($options->getOpt('u') && $options->getOpt('p') && $options->getOpt('h')) {
-                $pdo = $this->createPDO( $options->getOpt('h'), $options->getOpt('u'), $options->getOpt('p'));
+            if ($options->getOpt('username') && $options->getOpt('password') && $options->getOpt('host')) {
+                $pdo = $this->createPDO( $options->getOpt('host'), $options->getOpt('username'), $options->getOpt('password'));
             } else {
                 $pdo = $this->createPDO($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD']);
             }
