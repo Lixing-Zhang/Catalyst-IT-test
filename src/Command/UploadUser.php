@@ -57,6 +57,7 @@ into the DB. All other functions will be executed, but the database won\'t be al
                     $this->error('csv file provided is not in correct format', compact('file'));
                 }
 
+                $this->createDB($pdo);
                 $this->createTable($pdo);
 
                 foreach ($data as $user) {
@@ -99,14 +100,23 @@ into the DB. All other functions will be executed, but the database won\'t be al
 
     private function validateEmail(string $email): bool
     {
-        $validator = new EmailValidator();
-        return $validator->isValid($email, new RFCValidation()); //true
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
+    private function createDB(\PDO $pdo): void
+    {
+        try {
+            $pdo->exec("CREATE DATABASE IF NOT EXISTS users");
+            $pdo->query("USE users");
+            return;
+        } catch (PDOException $e) {
+            $this->error($e->getMessage());
+        }
+    }
     private function resetTable(\PDO $pdo): void
     {
+        $this->createDB($pdo);
         $this->dropTable($pdo);
-
         $this->createTable($pdo);
     }
 
