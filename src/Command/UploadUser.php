@@ -2,8 +2,6 @@
 
 namespace App\Command;
 
-use Egulias\EmailValidator\EmailValidator;
-use Egulias\EmailValidator\Validation\RFCValidation;
 use ParseCsv\Csv;
 use PDO;
 use PDOException;
